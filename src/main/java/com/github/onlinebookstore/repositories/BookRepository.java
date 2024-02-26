@@ -1,6 +1,6 @@
 package com.github.onlinebookstore.repositories;
 
-import com.github.onlinebookstore.models.Book;
+import com.github.onlinebookstore.model.Book;
 import java.util.List;
 
 public interface BookRepository {
