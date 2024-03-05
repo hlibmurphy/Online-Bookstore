@@ -1,10 +1,13 @@
 package com.github.onlinebookstore.services;
 
-import com.github.onlinebookstore.model.Book;
+import com.github.onlinebookstore.dto.BookDto;
+import com.github.onlinebookstore.dto.CreateBookRequestDto;
 import java.util.List;
 
 public interface BookService {
-    Book save(Book book);
+    BookDto save(CreateBookRequestDto requestDto);
 
-    List<Book> findAll();
+    List<BookDto> findAll();
+
+    BookDto findBookById(Long id);
 }

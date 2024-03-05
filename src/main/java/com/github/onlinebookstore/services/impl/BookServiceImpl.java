@@ -1,28 +1,40 @@
 package com.github.onlinebookstore.services.impl;
 
+import com.github.onlinebookstore.dto.BookDto;
+import com.github.onlinebookstore.dto.CreateBookRequestDto;
+import com.github.onlinebookstore.mapper.BookMapper;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repositories.BookRepository;
 import com.github.onlinebookstore.services.BookService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    @Autowired
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    @Override
+    public BookDto save(CreateBookRequestDto requestDto) {
+        Book book = bookMapper.toModel(requestDto);
+        return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public Book save(Book book) {
-        return bookRepository.save(book);
+    public List<BookDto> findAll() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDto)
+                .toList();
     }
 
     @Override
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public BookDto findBookById(Long id) {
+        Optional<Book> foundBook = bookRepository.findBookById(id);
+        return bookMapper.toDto(foundBook.orElseThrow(() -> new NoSuchElementException("No book "
+                + "with id " + id + " found.")));
     }
 }
