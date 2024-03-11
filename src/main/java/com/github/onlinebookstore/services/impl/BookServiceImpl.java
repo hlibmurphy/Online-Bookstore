@@ -33,8 +33,23 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto findBookById(Long id) {
-        Optional<Book> foundBook = bookRepository.findBookById(id);
+        Optional<Book> foundBook = bookRepository.findById(id);
         return bookMapper.toDto(foundBook.orElseThrow(() -> new NoSuchElementException("No book "
                 + "with id " + id + " found.")));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    @Override
+    public BookDto updateBook(Long id, CreateBookRequestDto newBookRequest) {
+        bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("No book with id " + id + " found."));
+        Book newBook = bookMapper.toModel(newBookRequest);
+        newBook.setId(id);
+        Book savedBook = bookRepository.save(newBook);
+        return bookMapper.toDto(savedBook);
     }
 }
