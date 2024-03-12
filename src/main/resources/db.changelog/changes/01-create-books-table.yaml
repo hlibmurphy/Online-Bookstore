@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-books-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: books
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(255)
+              - column:
+                  name: author
+                  type: varchar(255)
+              - column:
+                  name: isbn
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: decimal(10, 2)
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: coverImage
+                  type: varchar(255)
+              - column:
+                  name: isDeleted
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
