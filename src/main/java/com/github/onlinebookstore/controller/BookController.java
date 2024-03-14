@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.controller;
 
 import com.github.onlinebookstore.dto.BookDto;
+import com.github.onlinebookstore.dto.BookSearchParameters;
 import com.github.onlinebookstore.dto.CreateBookRequestDto;
 import com.github.onlinebookstore.services.BookService;
 import java.util.List;
@@ -43,5 +44,10 @@ public class BookController {
     @PutMapping("/{id}")
     public BookDto updateBook(@PathVariable Long id, @RequestBody CreateBookRequestDto requestDto) {
         return bookService.updateBook(id, requestDto);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> search(BookSearchParameters searchParameters) {
+        return bookService.search(searchParameters);
     }
 }
