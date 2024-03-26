@@ -1,6 +1,6 @@
 package com.github.onlinebookstore.repositories.impl;
 
-import com.github.onlinebookstore.dto.book.BookSearchParameters;
+import com.github.onlinebookstore.dto.BookSearchParameters;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repositories.SpecificationBuilder;
 import com.github.onlinebookstore.repositories.SpecificationProviderManager;

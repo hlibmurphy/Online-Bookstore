@@ -1,8 +1,8 @@
 package com.github.onlinebookstore.services.impl;
 
-import com.github.onlinebookstore.dto.book.BookDto;
-import com.github.onlinebookstore.dto.book.BookSearchParameters;
-import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
+import com.github.onlinebookstore.dto.BookDto;
+import com.github.onlinebookstore.dto.BookSearchParameters;
+import com.github.onlinebookstore.dto.CreateBookRequestDto;
 import com.github.onlinebookstore.mapper.BookMapper;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repositories.BookRepository;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +29,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable).stream()
+    public List<BookDto> findAll() {
+        return bookRepository.findAll().stream()
                 .map(bookMapper::toDto)
                 .toList();
     }

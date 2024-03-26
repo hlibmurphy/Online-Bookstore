@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.dto.book;
+package com.github.onlinebookstore.dto;
 
 import java.math.BigDecimal;
 import lombok.Data;
