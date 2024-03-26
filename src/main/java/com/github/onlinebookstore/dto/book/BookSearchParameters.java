@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.dto;
+package com.github.onlinebookstore.dto.book;
 
 import lombok.Data;
 
