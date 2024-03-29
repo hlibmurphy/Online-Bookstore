@@ -1,13 +1,14 @@
 package com.github.onlinebookstore.controller;
 
-import com.github.onlinebookstore.dto.BookDto;
-import com.github.onlinebookstore.dto.BookSearchParameters;
-import com.github.onlinebookstore.dto.CreateBookRequestDto;
+import com.github.onlinebookstore.dto.book.BookDto;
+import com.github.onlinebookstore.dto.book.BookSearchParameters;
+import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
 import com.github.onlinebookstore.services.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,7 @@ public class BookController {
 
     @PostMapping
     @Operation(summary = "Create book", description = "Create book")
-    public BookDto createBook(@RequestBody CreateBookRequestDto requestDto) {
+    public BookDto createBok(@Validated @RequestBody CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
@@ -49,7 +50,8 @@ public class BookController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id", description = "Update book by id")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody CreateBookRequestDto requestDto) {
+    public BookDto updateBook(@PathVariable Long id,
+                              @Validated @RequestBody CreateBookRequestDto requestDto) {
         return bookService.updateBook(id, requestDto);
     }
 

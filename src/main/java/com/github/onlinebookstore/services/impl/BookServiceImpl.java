@@ -1,8 +1,8 @@
 package com.github.onlinebookstore.services.impl;
 
-import com.github.onlinebookstore.dto.BookDto;
-import com.github.onlinebookstore.dto.BookSearchParameters;
-import com.github.onlinebookstore.dto.CreateBookRequestDto;
+import com.github.onlinebookstore.dto.book.BookDto;
+import com.github.onlinebookstore.dto.book.BookSearchParameters;
+import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
 import com.github.onlinebookstore.mapper.BookMapper;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repositories.BookRepository;
