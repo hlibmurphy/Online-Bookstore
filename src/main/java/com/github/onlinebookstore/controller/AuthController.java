@@ -1,8 +1,9 @@
 package com.github.onlinebookstore.controller;
 
+import com.github.onlinebookstore.dto.user.UserLoginRequestDto;
 import com.github.onlinebookstore.dto.user.UserRegisterRequestDto;
 import com.github.onlinebookstore.dto.user.UserResponseDto;
-import com.github.onlinebookstore.services.UserService;
+import com.github.onlinebookstore.services.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,10 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public UserResponseDto register(@Validated @RequestBody UserRegisterRequestDto requestDto) {
-        return userService.register(requestDto);
+        return authenticationService.register(requestDto);
+    }
+
+    @PostMapping("/login")
+    public boolean login(@RequestBody UserLoginRequestDto requestDto) {
+        return authenticationService.login(requestDto);
     }
 }

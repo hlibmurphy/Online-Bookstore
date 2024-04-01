@@ -13,14 +13,12 @@ public class UserRegisterRequestDto {
     @NotEmpty
     private String email;
     @NotEmpty
-    @Length(min = 8, max = 8)
+    @Length(min = 8)
     private String password;
     @NotEmpty
     private String repeatPassword;
     @NotEmpty
     private String firstName;
-    @NotEmpty
     private String lastName;
-    @NotEmpty
     private String shippingAddress;
 }
