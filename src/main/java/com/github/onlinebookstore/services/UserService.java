@@ -1,10 +1,10 @@
 package com.github.onlinebookstore.services;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import com.github.onlinebookstore.dto.user.UserResponseDto;
 
 public interface UserService {
 
     void deleteById(Long id);
 
-    UserDetails findByEmail(String email);
+    UserResponseDto findByEmail(String email);
 }
