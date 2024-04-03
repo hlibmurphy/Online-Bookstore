@@ -10,6 +10,7 @@ import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repositories.RoleRepository;
 import com.github.onlinebookstore.repositories.UserRepository;
 import com.github.onlinebookstore.services.AuthenticationService;
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RoleRepository roleRepository;
 
     @Override
+    @Transactional
     public UserResponseDto register(UserRegisterRequestDto requestDto)
             throws RegistrationException {
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
@@ -32,14 +34,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     + requestDto.getEmail());
         }
 
-        User user = new User();
-        user.setEmail(requestDto.getEmail());
+        User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        user.setFirstName(requestDto.getFirstName());
-        user.setLastName(requestDto.getLastName());
-        user.setShippingAddress(requestDto.getShippingAddress());
 
-        Role userRole = roleRepository.findByName(Role.RoleName.USER);
+        Role userRole = roleRepository.findByName(Role.RoleName.USER).orElseThrow(
+                () -> new RuntimeException("Cannot find a role " + Role.RoleName.USER));
         userRole.setName(Role.RoleName.USER);
         user.setRoles(Set.of(userRole));
 

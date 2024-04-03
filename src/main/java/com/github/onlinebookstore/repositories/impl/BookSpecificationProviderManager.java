@@ -1,8 +1,8 @@
 package com.github.onlinebookstore.repositories.impl;
 
 import com.github.onlinebookstore.model.Book;
-import com.github.onlinebookstore.repositories.SpecificationProvider;
-import com.github.onlinebookstore.repositories.SpecificationProviderManager;
+import com.github.onlinebookstore.repositories.specifications.SpecificationProvider;
+import com.github.onlinebookstore.repositories.specifications.SpecificationProviderManager;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;

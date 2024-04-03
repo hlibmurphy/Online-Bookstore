@@ -1,7 +1,7 @@
 package com.github.onlinebookstore.repositories.specifications.book;
 
 import com.github.onlinebookstore.model.Book;
-import com.github.onlinebookstore.repositories.SpecificationProvider;
+import com.github.onlinebookstore.repositories.specifications.SpecificationProvider;
 import java.util.Arrays;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
