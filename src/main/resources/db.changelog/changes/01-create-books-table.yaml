@@ -16,6 +16,8 @@ databaseChangeLog:
               - column:
                   name: title
                   type: varchar(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: author
                   type: varchar(255)
@@ -25,6 +27,8 @@ databaseChangeLog:
               - column:
                   name: price
                   type: decimal(10, 2)
+                  constraints:
+                    nullable: false
               - column:
                   name: description
                   type: varchar(255)

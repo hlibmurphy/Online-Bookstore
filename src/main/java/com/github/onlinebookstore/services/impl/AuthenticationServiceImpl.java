@@ -37,9 +37,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
-        Role userRole = roleRepository.findByName(Role.RoleName.USER).orElseThrow(
-                () -> new RuntimeException("Cannot find a role " + Role.RoleName.USER));
-        userRole.setName(Role.RoleName.USER);
+        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
+                () -> new RuntimeException("Cannot find a role " + Role.RoleName.ROLE_USER));
+        userRole.setName(Role.RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
 
         User savedUser = userRepository.save(user);

@@ -23,46 +23,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 public class BookController {
-    private static final String HAS_ROLE_USER = "hasRole('ROLE_USER')";
-    private static final String HAS_ROLE_ADMIN = "hasRole('ROLE_USER')";
     private final BookService bookService;
 
-    @PreAuthorize(HAS_ROLE_USER)
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     @Operation(summary = "Get all books", description = "Get all books")
     public List<BookDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
-    @PreAuthorize(HAS_ROLE_USER)
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
     @Operation(summary = "Get book from id", description = "Get book from id")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findBookById(id);
     }
 
-    @PreAuthorize(HAS_ROLE_USER)
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/search")
     @Operation(summary = "Search book by parameters", description = "Search book by parameters")
     public List<BookDto> search(BookSearchParameters searchParameters) {
         return bookService.search(searchParameters);
     }
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     @Operation(summary = "Create book", description = "Create book")
     public BookDto createBok(@Validated @RequestBody CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete book by id", description = "Delete book by id")
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 
-    @PreAuthorize(HAS_ROLE_ADMIN)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id", description = "Update book by id")
     public BookDto updateBook(@PathVariable Long id,
