@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.repositories;
+package com.github.onlinebookstore.repositories.specifications;
 
 import org.springframework.data.jpa.domain.Specification;
 

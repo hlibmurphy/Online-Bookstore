@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: associate-admin-with-role
+      author: hlib
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: role_id
+                  value: 2
