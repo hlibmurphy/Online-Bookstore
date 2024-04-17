@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.services.impl;
 
 import com.github.onlinebookstore.dto.user.UserLoginRequestDto;
+import com.github.onlinebookstore.dto.user.UserLoginResponseDto;
 import com.github.onlinebookstore.dto.user.UserRegisterRequestDto;
 import com.github.onlinebookstore.dto.user.UserResponseDto;
 import com.github.onlinebookstore.exception.RegistrationException;
@@ -9,11 +10,14 @@ import com.github.onlinebookstore.model.Role;
 import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repositories.RoleRepository;
 import com.github.onlinebookstore.repositories.UserRepository;
+import com.github.onlinebookstore.security.JwtUtil;
 import com.github.onlinebookstore.services.AuthenticationService;
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     @Transactional
@@ -47,12 +53,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean login(UserLoginRequestDto requestDto) {
-        Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
-        if (user.isEmpty()) {
-            return false;
-        }
+    public UserLoginResponseDto login(UserLoginRequestDto requestDto) {
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(requestDto.getEmail(),
+                        requestDto.getPassword())
+        );
 
-        return requestDto.getPassword().equals(user.get().getPassword());
+        String token = jwtUtil.generateToken(authentication.getName());
+        return new UserLoginResponseDto(token);
     }
 }
