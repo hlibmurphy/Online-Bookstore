@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.controller;
 
 import com.github.onlinebookstore.dto.user.UserLoginRequestDto;
+import com.github.onlinebookstore.dto.user.UserLoginResponseDto;
 import com.github.onlinebookstore.dto.user.UserRegisterRequestDto;
 import com.github.onlinebookstore.dto.user.UserResponseDto;
 import com.github.onlinebookstore.services.AuthenticationService;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody UserLoginRequestDto requestDto) {
+    public UserLoginResponseDto login(@RequestBody UserLoginRequestDto requestDto) {
         return authenticationService.login(requestDto);
     }
 }
