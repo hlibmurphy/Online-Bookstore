@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.services;
 
 import com.github.onlinebookstore.dto.book.BookDto;
+import com.github.onlinebookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.github.onlinebookstore.dto.book.BookSearchParameters;
 import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
 import java.util.List;
@@ -12,6 +13,8 @@ public interface BookService {
     List<BookDto> findAll(Pageable pageable);
 
     BookDto findBookById(Long id);
+
+    List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId);
 
     void deleteById(Long id);
 

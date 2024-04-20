@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-books-categories-join-table
+      author: hlib
+      changes:
+        - createTable:
+            tableName: books_categories
+            columns:
+              - column:
+                  name: book_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_books_categories_books
+                    referencedTableName: books
+                    referencedColumnNames: id
+              - column:
+                  name: category_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_books_categories_categories
+                    referencedTableName: categories
+                    referencedColumnNames: id
+            constraints:
+              - primaryKey:
+                  columnNames: book_id, category_id
+                  constraintName: pk_books_categories
