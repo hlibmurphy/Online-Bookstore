@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.services.impl;
 
 import com.github.onlinebookstore.dto.book.BookDto;
+import com.github.onlinebookstore.dto.book.BookDtoWithoutCategoryIds;
 import com.github.onlinebookstore.dto.book.BookSearchParameters;
 import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
 import com.github.onlinebookstore.mapper.BookMapper;
@@ -41,6 +42,13 @@ public class BookServiceImpl implements BookService {
         Optional<Book> foundBook = bookRepository.findById(id);
         return bookMapper.toDto(foundBook.orElseThrow(() -> new NoSuchElementException("No book "
                 + "with id " + id + " found.")));
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId) {
+        return bookRepository.findAllByCategoryId(categoryId).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
     }
 
     @Override

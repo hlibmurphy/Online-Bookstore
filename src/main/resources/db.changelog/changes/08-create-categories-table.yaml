@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-books-table
+      id: create-categories-table
       author: hlib
       changes:
         - createTable:
-            tableName: books
+            tableName: categories
             columns:
               - column:
                   name: id
@@ -14,26 +14,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: title
+                  name: name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: author
-                  type: varchar(255)
-              - column:
-                  name: isbn
-                  type: varchar(255)
-              - column:
-                  name: price
-                  type: decimal(10, 2)
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(1000)
-              - column:
-                  name: cover_image
                   type: varchar(255)
               - column:
                   name: is_deleted

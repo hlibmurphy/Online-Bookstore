@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 public class BookController {
+    private static final int STANDARD_PAGE_SIZE = 10;
     private final BookService bookService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
-    @Operation(summary = "Get all books", description = "Get all books")
-    public List<BookDto> getAll(Pageable pageable) {
+    @Operation(summary = "Get all books", description = "Get all books starting from a "
+            + "first page with a size of " + STANDARD_PAGE_SIZE)
+    public List<BookDto> getAll(
+            @PageableDefault(page = 0, size = STANDARD_PAGE_SIZE) Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
