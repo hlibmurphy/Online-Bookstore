@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-cart-for-admin
+      author: hlib
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column:
+                  name: user_id
+                  value: 1

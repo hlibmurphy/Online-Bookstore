@@ -3,7 +3,7 @@ package com.github.onlinebookstore.controller;
 import com.github.onlinebookstore.dto.book.BookDto;
 import com.github.onlinebookstore.dto.book.BookSearchParameters;
 import com.github.onlinebookstore.dto.book.CreateBookRequestDto;
-import com.github.onlinebookstore.services.BookService;
+import com.github.onlinebookstore.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

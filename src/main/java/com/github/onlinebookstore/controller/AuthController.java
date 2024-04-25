@@ -4,7 +4,7 @@ import com.github.onlinebookstore.dto.user.UserLoginRequestDto;
 import com.github.onlinebookstore.dto.user.UserLoginResponseDto;
 import com.github.onlinebookstore.dto.user.UserRegisterRequestDto;
 import com.github.onlinebookstore.dto.user.UserResponseDto;
-import com.github.onlinebookstore.services.AuthenticationService;
+import com.github.onlinebookstore.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
