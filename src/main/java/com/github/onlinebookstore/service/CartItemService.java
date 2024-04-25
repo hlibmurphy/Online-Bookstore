@@ -5,4 +5,6 @@ import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 
 public interface CartItemService {
     CartItemDto save(CreateCartItemRequestDto requestDto);
+
+    CartItemDto findById(Long id);
 }

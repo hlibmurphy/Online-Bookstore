@@ -2,10 +2,20 @@ package com.github.onlinebookstore.service;
 
 import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
-import com.github.onlinebookstore.model.User;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 
 public interface ShoppingCartService {
-    ShoppingCartResponseDto get(User user);
+    ShoppingCartResponseDto get(Long userId, Pageable pageable);
 
-    void addItem(CreateCartItemRequestDto cartItemRequestDto, User user);
+    @Transactional
+    ShoppingCartResponseDto addItem(CreateCartItemRequestDto cartItemRequestDto, Long userId);
+
+    @Transactional
+    ShoppingCartResponseDto updateItem(
+            CreateCartItemRequestDto requestDto,
+            Long userId,
+            Long cartId);
+
+    void removeItemFromCart(Long id);
 }
