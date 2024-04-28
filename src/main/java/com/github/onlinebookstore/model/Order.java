@@ -2,6 +2,8 @@ package com.github.onlinebookstore.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +33,7 @@ public class Order {
     private User user;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @NotNull
@@ -42,7 +45,8 @@ public class Order {
     @NotNull
     private String shippingAddress;
 
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", orphanRemoval = true, fetch = FetchType.LAZY, cascade =
+            CascadeType.ALL)
     private Set<OrderItem> orderItems = new HashSet<>();
 
     public enum Status {
