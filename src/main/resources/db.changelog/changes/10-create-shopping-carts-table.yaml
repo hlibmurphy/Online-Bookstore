@@ -20,3 +20,9 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_shopping_carts_users
                     references: users(id)
+              - column:
+                  name: is_deleted
+                  type: bit
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

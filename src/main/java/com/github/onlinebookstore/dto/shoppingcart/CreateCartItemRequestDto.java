@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.dto.cartitem;
+package com.github.onlinebookstore.dto.shoppingcart;
 
 import lombok.Data;
 
