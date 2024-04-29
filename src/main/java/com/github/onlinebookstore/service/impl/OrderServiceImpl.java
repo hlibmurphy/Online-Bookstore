@@ -17,14 +17,13 @@ import com.github.onlinebookstore.repository.ShoppingCartRepository;
 import com.github.onlinebookstore.repository.UserRepository;
 import com.github.onlinebookstore.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,12 +37,10 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepository;
 
     @Override
+    @Transactional
     public OrderDto add(CreateOrderRequestDto requestDto, Long userId) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
-        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
-                .map(orderItemMapper::toOrderItem)
-                .collect(Collectors.toSet());
-
+        Set<OrderItem> orderItems = orderItemMapper.toOrderItem(shoppingCart.getCartItems());
         Order order = orderMapper.toModel(requestDto);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         order.setOrderItems(orderItems);
@@ -60,30 +57,13 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(savedOrder);
     }
 
-    private User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new EntityNotFoundException("User with id " + userId + " not found")
-        );
-    }
-
-    private ShoppingCart getShoppingCartByUserId(Long userId) {
-        return shoppingCartRepository.findByUserId(userId)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("No shopping cart owned by user with id "
-                                + userId + " found"));
-    }
-
     @Override
     public OrderHistoryDto getOrderHistoryById(Long userId) {
-        List<OrderDto> orderDtos = orderRepository.findAllByUserId(userId).stream()
-                .map(orderMapper::toDto)
-                .toList();
-
+        List<OrderDto> orderDtos = orderMapper.toDto(orderRepository.findAllByUserId(userId));
         return orderMapper.toHistoryDto(orderDtos);
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == authentication.principal.id")
     public OrderDto getOrderById(Long orderId, Long userId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Order with userId " + userId + " not found")
@@ -93,7 +73,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #userId == authentication.principal.id")
     public OrderItemDto getOrderItemById(Long orderId, Long itemId, Long userId) {
         OrderItem orderItem = orderItemRepository.findById(itemId).orElseThrow(
                 () -> new EntityNotFoundException("Order item with itemId " + itemId + " not found")
@@ -108,6 +87,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto updateOrder(PatchOrderRequestDto requestDto, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Order with id " + orderId + " not found")
@@ -116,5 +96,18 @@ public class OrderServiceImpl implements OrderService {
         Order updatedOrder = orderRepository.save(order);
 
         return orderMapper.toDto(updatedOrder);
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException("User with id " + userId + " not found")
+        );
+    }
+
+    private ShoppingCart getShoppingCartByUserId(Long userId) {
+        return shoppingCartRepository.findByUserId(userId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("No shopping cart owned by user with id "
+                                + userId + " found"));
     }
 }

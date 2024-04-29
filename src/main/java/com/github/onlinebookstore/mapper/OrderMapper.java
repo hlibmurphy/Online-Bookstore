@@ -16,6 +16,9 @@ public interface OrderMapper {
     @Mapping(target = "userId", source = "user.id")
     OrderDto toDto(Order order);
 
+    @Mapping(target = "userId", source = "user.id")
+    List<OrderDto> toDto(List<Order> order);
+
     default OrderHistoryDto toHistoryDto(List<OrderDto> orderDtos) {
         OrderHistoryDto historyDto = new OrderHistoryDto();
         historyDto.setOrders(orderDtos);

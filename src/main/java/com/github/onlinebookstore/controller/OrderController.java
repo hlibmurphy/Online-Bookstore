@@ -45,7 +45,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/items")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #authentication == authentication")
     @Operation(summary = "Get a specific order by id",
             description = "Get a specific order by id. Users can see only their orders")
     public OrderDto getOrderById(@PathVariable Long orderId, Authentication authentication) {
@@ -54,7 +54,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}/items/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #authentication == authentication")
     @Operation(summary = "Get a specific item in a specific order",
             description = "Get a specific item in a specific order by their ids. "
                     + "Users can see only their orders")

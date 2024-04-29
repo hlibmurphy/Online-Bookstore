@@ -13,6 +13,7 @@ import com.github.onlinebookstore.repository.CartItemRepository;
 import com.github.onlinebookstore.repository.ShoppingCartRepository;
 import com.github.onlinebookstore.service.ShoppingCartService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
+    @Transactional
     public ShoppingCartResponseDto addItem(CreateCartItemRequestDto requestDto, Long userId) {
         Book book = findBookByIdFromDto(requestDto);
 
