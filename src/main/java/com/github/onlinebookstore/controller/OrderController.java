@@ -9,6 +9,7 @@ import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repository.OrderRepository;
 import com.github.onlinebookstore.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,43 +33,46 @@ public class OrderController {
     @Operation(summary = "Create a new order")
     public OrderDto addOrder(@RequestBody CreateOrderRequestDto requestDto,
                              Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.add(requestDto, user.getId());
+        return orderService.add(requestDto, getUserId(authentication));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get order history", description = "Get user's order history")
     public OrderHistoryDto getOrder(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderHistoryById(user.getId());
+        return orderService.getOrderHistoryById(getUserId(authentication));
     }
 
     @GetMapping("/{orderId}/items")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #authentication == authentication")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get a specific order by id",
             description = "Get a specific order by id. Users can see only their orders")
-    public OrderDto getOrderById(@PathVariable Long orderId, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderById(orderId, user.getId());
+    public OrderDto getOrderById(@PathVariable @Positive Long orderId,
+                                 Authentication authentication) {
+        return orderService.getOrderById(orderId, getUserId(authentication));
     }
 
-    @GetMapping("/{orderId}/items/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #authentication == authentication")
+    @GetMapping("/{orderId}/items/{itemId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get a specific item in a specific order",
             description = "Get a specific item in a specific order by their ids. "
                     + "Users can see only their orders")
-    public OrderItemDto getOrderItemById(@PathVariable Long orderId,
-                                         @PathVariable Long id, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        return orderService.getOrderItemById(orderId, id, user.getId());
+    public OrderItemDto getOrderItemById(@PathVariable @Positive Long orderId,
+                                         @PathVariable @Positive Long itemId,
+                                         Authentication authentication) {
+        return orderService.getOrderItemById(orderId, itemId, getUserId(authentication));
     }
 
     @PatchMapping("/{orderId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update order's status")
     public OrderDto updateOrder(@RequestBody PatchOrderRequestDto requestDto,
-                                @PathVariable Long orderId) {
+                                @PathVariable @Positive Long orderId) {
         return orderService.updateOrder(requestDto, orderId);
+    }
+
+    private Long getUserId(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return user.getId();
     }
 }
