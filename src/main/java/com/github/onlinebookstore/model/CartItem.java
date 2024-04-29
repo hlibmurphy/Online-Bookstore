@@ -24,17 +24,13 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(nullable = false)
     private Book book;
-
     @NotNull
     private int quantity;
-
     @ManyToOne
     private ShoppingCart shoppingCart;
-
     @NotNull
     private boolean isDeleted = false;
 }

@@ -1,10 +1,9 @@
 package com.github.onlinebookstore.dto.order;
 
-import lombok.Data;
+public record OrderItemDtoWithoutOrder(
+        Long id,
+        Long bookId,
+        int quantity
+) {
 
-@Data
-public class OrderItemDtoWithoutOrder {
-    private Long id;
-    private Long bookId;
-    private int quantity;
 }

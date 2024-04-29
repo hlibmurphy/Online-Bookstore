@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -70,12 +69,6 @@ public class OrderServiceImpl implements OrderService {
                 () -> new EntityNotFoundException("Order with userId " + userId + " not found")
         );
 
-        if (!order.getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("User "
-                    + userId
-                    + " is not authorized to access this order");
-        }
-
         return orderMapper.toDto(order);
     }
 
@@ -88,12 +81,6 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(orderItem.getOrder().getId(), orderId)) {
             throw new EntityNotFoundException("Order with id " + orderId
                     + " not found in order " + "with id " + itemId);
-        }
-
-        if (!orderItem.getOrder().getUser().getId().equals(userId)) {
-            throw new AccessDeniedException("User "
-                    + userId
-                    + " is not authorized to access this order");
         }
 
         return orderItemMapper.toDto(orderItem);

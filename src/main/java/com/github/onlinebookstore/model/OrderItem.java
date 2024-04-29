@@ -21,19 +21,15 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "order_id")
     @NotNull
     private Order order;
-
     @NotNull
     @ManyToOne
     private Book book;
-
     @NotNull
     private int quantity;
-
     @NotNull
     private BigDecimal price;
 }

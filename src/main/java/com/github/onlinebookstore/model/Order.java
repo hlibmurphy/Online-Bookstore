@@ -27,21 +27,16 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(cascade = CascadeType.REMOVE)
     @NotNull
     private User user;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
-
     @NotNull
     private BigDecimal total;
-
     @NotNull
     private LocalDateTime orderDate;
-
     @NotNull
     private String shippingAddress;
 

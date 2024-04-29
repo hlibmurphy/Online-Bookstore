@@ -4,6 +4,7 @@ import com.github.onlinebookstore.dto.shoppingcart.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
 import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.service.ShoppingCartService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,6 +27,8 @@ public class CartController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Get a shopping cart",
+            description = "Get a shopping cart with all its items")
     public ShoppingCartResponseDto getShoppingCart(
             Authentication authentication,
             @PageableDefault(size = 1, page = 0) Pageable pageable) {
@@ -36,6 +39,8 @@ public class CartController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Add an item to a shopping cart",
+            description = "Add an item to a shopping cart")
     public ShoppingCartResponseDto addItemToCart(
             @RequestBody CreateCartItemRequestDto cartItemRequestDto,
             Authentication authentication) {
@@ -45,6 +50,8 @@ public class CartController {
 
     @PutMapping("/cart-items/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Change shopping cart item",
+            description = "Change an item from a user's cart")
     public ShoppingCartResponseDto changeItemInCart(
             @RequestBody CreateCartItemRequestDto cartItemRequestDto,
             Authentication authentication,
@@ -55,6 +62,8 @@ public class CartController {
 
     @DeleteMapping("/cart-items/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Remove an item from a shopping cart",
+            description = "Remove an item from user's shopping cart")
     public void removeItemFromCart(@PathVariable Long id) {
         shoppingCartService.removeItemFromCart(id);
     }
