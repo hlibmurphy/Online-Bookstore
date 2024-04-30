@@ -6,11 +6,12 @@ import com.github.onlinebookstore.dto.order.OrderHistoryDto;
 import com.github.onlinebookstore.dto.order.OrderItemDto;
 import com.github.onlinebookstore.dto.order.PatchOrderRequestDto;
 import com.github.onlinebookstore.model.User;
-import com.github.onlinebookstore.repository.OrderRepository;
 import com.github.onlinebookstore.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,23 +25,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 @AllArgsConstructor
+@Tag(name = "Orders", description = "Operations related to orders")
 public class OrderController {
-    private final OrderRepository orderRepository;
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Create a new order")
-    public OrderDto addOrder(@RequestBody CreateOrderRequestDto requestDto,
-                             Authentication authentication) {
+    public OrderDto createOrder(@RequestBody CreateOrderRequestDto requestDto,
+                                Authentication authentication) {
         return orderService.add(requestDto, getUserId(authentication));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get order history", description = "Get user's order history")
-    public OrderHistoryDto getOrder(Authentication authentication) {
-        return orderService.getOrderHistoryById(getUserId(authentication));
+    public OrderHistoryDto getOrders(Authentication authentication, Pageable pageable) {
+        return orderService.getAllOrders(getUserId(authentication), pageable);
     }
 
     @GetMapping("/{orderId}/items")

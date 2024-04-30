@@ -21,9 +21,11 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,7 +42,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto add(CreateOrderRequestDto requestDto, Long userId) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
-        Set<OrderItem> orderItems = orderItemMapper.toOrderItem(shoppingCart.getCartItems());
+        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
+                .map(orderItemMapper::toOrderItem)
+                .collect(Collectors.toSet());
         Order order = orderMapper.toModel(requestDto);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         order.setOrderItems(orderItems);
@@ -58,14 +62,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderHistoryDto getOrderHistoryById(Long userId) {
-        List<OrderDto> orderDtos = orderMapper.toDto(orderRepository.findAllByUserId(userId));
+    public OrderHistoryDto getAllOrders(Long userId, Pageable pageable) {
+        Page<Order> ordersPage = orderRepository.findAllByUserId(userId, pageable);
+        List<OrderDto> orderDtos = ordersPage.getContent().stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
         return orderMapper.toHistoryDto(orderDtos);
     }
 
     @Override
     public OrderDto getOrderById(Long orderId, Long userId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(
+        Order order = orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(
                 () -> new EntityNotFoundException("Order with userId " + userId + " not found")
         );
 
@@ -73,15 +80,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderItemDto getOrderItemById(Long orderId, Long itemId, Long userId) {
-        OrderItem orderItem = orderItemRepository.findById(itemId).orElseThrow(
-                () -> new EntityNotFoundException("Order item with itemId " + itemId + " not found")
+    public OrderItemDto getOrderItemById(Long orderId, Long orderItemId, Long userId) {
+        OrderItem orderItem =
+                orderItemRepository.findByIdAndOrderIdAndOrderUserId(orderItemId, orderId, userId)
+                        .orElseThrow(
+                                () -> new EntityNotFoundException("Order item with itemId "
+                                        + orderItemId + " not found")
         );
-
-        if (!Objects.equals(orderItem.getOrder().getId(), orderId)) {
-            throw new EntityNotFoundException("Order with id " + orderId
-                    + " not found in order " + "with id " + itemId);
-        }
 
         return orderItemMapper.toDto(orderItem);
     }

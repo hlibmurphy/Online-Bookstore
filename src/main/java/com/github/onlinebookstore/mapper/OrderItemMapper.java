@@ -5,7 +5,6 @@ import com.github.onlinebookstore.dto.order.OrderItemDto;
 import com.github.onlinebookstore.dto.order.OrderItemDtoWithoutOrder;
 import com.github.onlinebookstore.model.CartItem;
 import com.github.onlinebookstore.model.OrderItem;
-import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,7 +15,7 @@ public interface OrderItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "price", source = "book.price")
-    Set<OrderItem> toOrderItem(Set<CartItem> cartItem);
+    OrderItem toOrderItem(CartItem cartItem);
 
     @Mapping(target = "bookId", source = "book.id")
     @Mapping(target = "orderId", source = "order.id")
