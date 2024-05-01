@@ -1,7 +1,7 @@
 package com.github.onlinebookstore.dto.order;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 
-public record CreateOrderRequestDto(@NotEmpty String shippingAddress) {
+public record CreateOrderRequestDto(@NotBlank String shippingAddress) {
 
 }

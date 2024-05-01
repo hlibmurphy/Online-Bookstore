@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class ShoppingCart {
     private User user;
     @OneToMany(mappedBy = "shoppingCart", orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
-    @NotNull
+    @Column(nullable = false)
     private boolean isDeleted = false;
 
     public void addItemToCart(CartItem cartItem) {

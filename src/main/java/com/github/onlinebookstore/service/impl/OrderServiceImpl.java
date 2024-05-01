@@ -2,9 +2,7 @@ package com.github.onlinebookstore.service.impl;
 
 import com.github.onlinebookstore.dto.order.CreateOrderRequestDto;
 import com.github.onlinebookstore.dto.order.OrderDto;
-import com.github.onlinebookstore.dto.order.OrderHistoryDto;
-import com.github.onlinebookstore.dto.order.OrderItemDto;
-import com.github.onlinebookstore.dto.order.PatchOrderRequestDto;
+import com.github.onlinebookstore.dto.order.UpdateOrderRequestDto;
 import com.github.onlinebookstore.mapper.OrderItemMapper;
 import com.github.onlinebookstore.mapper.OrderMapper;
 import com.github.onlinebookstore.model.Order;
@@ -22,7 +20,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +39,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDto add(CreateOrderRequestDto requestDto, Long userId) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
-        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
-                .map(orderItemMapper::toOrderItem)
-                .collect(Collectors.toSet());
+        Set<OrderItem> orderItems = orderItemMapper.toOrderItems(shoppingCart.getCartItems());
         Order order = orderMapper.toModel(requestDto);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         order.setOrderItems(orderItems);
@@ -62,38 +57,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderHistoryDto getAllOrders(Long userId, Pageable pageable) {
+    public List<OrderDto> getAllOrders(Long userId, Pageable pageable) {
         Page<Order> ordersPage = orderRepository.findAllByUserId(userId, pageable);
-        List<OrderDto> orderDtos = ordersPage.getContent().stream()
-                .map(orderMapper::toDto)
-                .collect(Collectors.toList());
-        return orderMapper.toHistoryDto(orderDtos);
-    }
-
-    @Override
-    public OrderDto getOrderById(Long orderId, Long userId) {
-        Order order = orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(
-                () -> new EntityNotFoundException("Order with userId " + userId + " not found")
-        );
-
-        return orderMapper.toDto(order);
-    }
-
-    @Override
-    public OrderItemDto getOrderItemById(Long orderId, Long orderItemId, Long userId) {
-        OrderItem orderItem =
-                orderItemRepository.findByIdAndOrderIdAndOrderUserId(orderItemId, orderId, userId)
-                        .orElseThrow(
-                                () -> new EntityNotFoundException("Order item with itemId "
-                                        + orderItemId + " not found")
-        );
-
-        return orderItemMapper.toDto(orderItem);
+        List<Order> orders = ordersPage.getContent();
+        return orderMapper.toDtos(orders);
     }
 
     @Override
     @Transactional
-    public OrderDto updateOrder(PatchOrderRequestDto requestDto, Long orderId) {
+    public OrderDto updateOrder(UpdateOrderRequestDto requestDto, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
                 () -> new EntityNotFoundException("Order with id " + orderId + " not found")
         );

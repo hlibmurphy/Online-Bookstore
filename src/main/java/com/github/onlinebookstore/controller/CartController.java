@@ -1,6 +1,6 @@
 package com.github.onlinebookstore.controller;
 
-import com.github.onlinebookstore.dto.shoppingcart.CreateCartItemRequestDto;
+import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
 import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.service.ShoppingCartService;

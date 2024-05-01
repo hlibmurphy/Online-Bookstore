@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.dto.order;
 
+import com.github.onlinebookstore.dto.orderitem.OrderItemDtoWithoutOrder;
 import com.github.onlinebookstore.model.Order;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,8 +1,8 @@
 package com.github.onlinebookstore.mapper;
 
 import com.github.onlinebookstore.config.MapperConfig;
-import com.github.onlinebookstore.dto.shoppingcart.CartItemDto;
-import com.github.onlinebookstore.dto.shoppingcart.CreateCartItemRequestDto;
+import com.github.onlinebookstore.dto.cartitem.CartItemDto;
+import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.model.CartItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

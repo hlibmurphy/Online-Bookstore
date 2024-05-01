@@ -4,6 +4,6 @@ import com.github.onlinebookstore.model.Order;
 import lombok.Data;
 
 @Data
-public class PatchOrderRequestDto {
+public class UpdateOrderRequestDto {
     private Order.Status status;
 }

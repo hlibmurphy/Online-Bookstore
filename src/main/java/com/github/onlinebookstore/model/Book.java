@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,7 +9,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,6 +42,6 @@ public class Book {
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private Set<Category> categories = new HashSet<>();
-    @NotNull
+    @Column(nullable = false)
     private boolean isDeleted = false;
 }

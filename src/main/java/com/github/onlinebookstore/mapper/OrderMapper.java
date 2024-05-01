@@ -3,7 +3,6 @@ package com.github.onlinebookstore.mapper;
 import com.github.onlinebookstore.config.MapperConfig;
 import com.github.onlinebookstore.dto.order.CreateOrderRequestDto;
 import com.github.onlinebookstore.dto.order.OrderDto;
-import com.github.onlinebookstore.dto.order.OrderHistoryDto;
 import com.github.onlinebookstore.model.Order;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -16,9 +15,9 @@ public interface OrderMapper {
     @Mapping(target = "userId", source = "user.id")
     OrderDto toDto(Order order);
 
-    default OrderHistoryDto toHistoryDto(List<OrderDto> orderDtos) {
-        OrderHistoryDto historyDto = new OrderHistoryDto();
-        historyDto.setOrders(orderDtos);
-        return historyDto;
+    default List<OrderDto> toDtos(List<Order> orders) {
+        return orders.stream()
+                .map(this::toDto)
+                .toList();
     }
 }

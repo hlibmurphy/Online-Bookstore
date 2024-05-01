@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.dto.order;
+package com.github.onlinebookstore.dto.orderitem;
 
 import lombok.Data;
 

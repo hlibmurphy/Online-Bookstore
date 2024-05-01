@@ -1,4 +1,4 @@
-package com.github.onlinebookstore.dto.order;
+package com.github.onlinebookstore.dto.orderitem;
 
 public record OrderItemDtoWithoutOrder(
         Long id,

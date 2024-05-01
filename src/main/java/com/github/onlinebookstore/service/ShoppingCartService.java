@@ -1,6 +1,6 @@
 package com.github.onlinebookstore.service;
 
-import com.github.onlinebookstore.dto.shoppingcart.CreateCartItemRequestDto;
+import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
 import org.springframework.data.domain.Pageable;
 

@@ -1,7 +1,7 @@
 package com.github.onlinebookstore.service.impl;
 
-import com.github.onlinebookstore.dto.shoppingcart.CartItemDto;
-import com.github.onlinebookstore.dto.shoppingcart.CreateCartItemRequestDto;
+import com.github.onlinebookstore.dto.cartitem.CartItemDto;
+import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.mapper.CartItemMapper;
 import com.github.onlinebookstore.model.CartItem;
 import com.github.onlinebookstore.repository.CartItemRepository;
