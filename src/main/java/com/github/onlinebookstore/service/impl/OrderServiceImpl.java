@@ -9,7 +9,6 @@ import com.github.onlinebookstore.model.Order;
 import com.github.onlinebookstore.model.OrderItem;
 import com.github.onlinebookstore.model.ShoppingCart;
 import com.github.onlinebookstore.model.User;
-import com.github.onlinebookstore.repository.OrderItemRepository;
 import com.github.onlinebookstore.repository.OrderRepository;
 import com.github.onlinebookstore.repository.ShoppingCartRepository;
 import com.github.onlinebookstore.repository.UserRepository;
@@ -17,7 +16,6 @@ import com.github.onlinebookstore.service.OrderService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -33,7 +31,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemMapper orderItemMapper;
     private final ShoppingCartRepository shoppingCartRepository;
     private final UserRepository userRepository;
-    private final OrderItemRepository orderItemRepository;
 
     @Override
     @Transactional
@@ -43,10 +40,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderMapper.toModel(requestDto);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         order.setOrderItems(orderItems);
-        order.setOrderDate(LocalDateTime.now());
         User user = getUserById(userId);
         order.setUser(user);
-        order.setStatus(Order.Status.PENDING);
         order.setTotal(order.getOrderItems().stream()
                 .map(orderItem -> orderItem.getPrice()
                         .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
