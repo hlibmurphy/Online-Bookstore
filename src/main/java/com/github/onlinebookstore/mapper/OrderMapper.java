@@ -15,9 +15,5 @@ public interface OrderMapper {
     @Mapping(target = "userId", source = "user.id")
     OrderDto toDto(Order order);
 
-    default List<OrderDto> toDtos(List<Order> orders) {
-        return orders.stream()
-                .map(this::toDto)
-                .toList();
-    }
+    List<OrderDto> toDtos(List<Order> orders);
 }

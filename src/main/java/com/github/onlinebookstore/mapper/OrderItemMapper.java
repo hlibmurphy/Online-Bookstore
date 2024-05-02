@@ -24,15 +24,11 @@ public interface OrderItemMapper {
     @Mapping(target = "orderId", source = "order.id")
     OrderItemDto toDto(OrderItem orderItem);
 
+    List<OrderItemDto> toDtos(List<OrderItem> orderItems);
+
     default Set<OrderItem> toOrderItems(Set<CartItem> cartItems) {
         return cartItems.stream()
                 .map(this::toOrderItem)
                 .collect(Collectors.toSet());
-    }
-
-    default List<OrderItemDto> toDtos(List<OrderItem> orderItems) {
-        return orderItems.stream()
-                .map(this::toDto)
-                .toList();
     }
 }

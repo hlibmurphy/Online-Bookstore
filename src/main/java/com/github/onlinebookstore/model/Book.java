@@ -22,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @SQLDelete(sql = "UPDATE books SET is_deleted = TRUE WHERE id = ?")
-@SQLRestriction(value = "is_deleted = false")
+@SQLRestriction(value = "is_deleted = FALSE")
 @Table(name = "books")
 @RequiredArgsConstructor
 public class Book {
