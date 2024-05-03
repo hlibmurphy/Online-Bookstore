@@ -10,10 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-    @Override
-    @EntityGraph(attributePaths = "categories")
-    Page<Book> findAll(Pageable pageable);
-
     @EntityGraph(attributePaths = "categories")
     Page<Book> findAll(Specification bookSpecification, Pageable pageable);
 
