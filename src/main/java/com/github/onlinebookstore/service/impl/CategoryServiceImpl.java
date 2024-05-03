@@ -7,8 +7,10 @@ import com.github.onlinebookstore.model.Category;
 import com.github.onlinebookstore.repository.CategoryRepository;
 import com.github.onlinebookstore.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable).stream()
-                .map(categoryMapper::toDto).toList();
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        return categoryMapper.toDtos(categories);
     }
 
     @Override
@@ -41,7 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto update(Long id, CreateCategoryRequestDto requestDtos) {
+    @Transactional
+    public CategoryResponseDto updateCategory(Long id, CreateCategoryRequestDto requestDtos) {
         categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "Cannot find category with id: " + id));
         Category newCategory = categoryMapper.toModel(requestDtos);
@@ -51,6 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryResponseDto deleteById(Long id) {
         Category category =
                 categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(

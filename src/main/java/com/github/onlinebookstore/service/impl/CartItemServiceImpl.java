@@ -7,6 +7,7 @@ import com.github.onlinebookstore.model.CartItem;
 import com.github.onlinebookstore.repository.CartItemRepository;
 import com.github.onlinebookstore.service.CartItemService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartItemRepository;
 
     @Override
+    @Transactional
     public CartItemDto save(CreateCartItemRequestDto requestDto) {
         CartItem savedCartItem = cartItemRepository.save(cartItemMapper.toModel(requestDto));
         return cartItemMapper.toDto(savedCartItem);

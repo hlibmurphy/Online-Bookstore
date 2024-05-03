@@ -15,16 +15,14 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Getter
 @Setter
-@ToString
-@SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id = ?")
-@SQLRestriction(value = "is_deleted = false")
+@SQLDelete(sql = "UPDATE books SET is_deleted = TRUE WHERE id = ?")
+@SQLRestriction(value = "is_deleted = FALSE")
 @Table(name = "books")
 @RequiredArgsConstructor
 public class Book {
@@ -37,16 +35,13 @@ public class Book {
     private BigDecimal price;
     private String description;
     private String coverImage;
-
     @ManyToMany
     @JoinTable(
             name = "books_categories",
             joinColumns = {@JoinColumn(name = "book_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    @ToString.Exclude
     private Set<Category> categories = new HashSet<>();
-
     @Column(nullable = false)
     private boolean isDeleted = false;
 }

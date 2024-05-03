@@ -25,8 +25,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
-@SQLRestriction(value = "is_deleted = false")
+@SQLDelete(sql = "UPDATE users SET is_deleted = TRUE WHERE id = ?")
+@SQLRestriction(value = "is_deleted = FALSE")
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
@@ -37,7 +37,6 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String shippingAddress;
-
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -45,10 +44,8 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
-
     @Column(nullable = false)
     private boolean isDeleted = false;
-
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private ShoppingCart shoppingCart;
 

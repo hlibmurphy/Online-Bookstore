@@ -65,7 +65,7 @@ public class CategoryController {
     public CategoryResponseDto updateCategory(@PathVariable Long id,
                                               @Validated @RequestBody
                                               CreateCategoryRequestDto requestDtos) {
-        return categoryService.update(id, requestDtos);
+        return categoryService.updateCategory(id, requestDtos);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

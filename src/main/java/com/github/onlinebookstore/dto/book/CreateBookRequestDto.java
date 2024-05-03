@@ -1,6 +1,6 @@
 package com.github.onlinebookstore.dto.book;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
@@ -10,8 +10,9 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 public class CreateBookRequestDto {
-    @NotEmpty
+    @NotBlank
     private String title;
+    @NotBlank
     private String author;
     @Length(min = 13, max = 13)
     private String isbn;
