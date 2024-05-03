@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.service.impl;
 
+import com.github.onlinebookstore.dto.book.UpdateBookRequestDto;
 import com.github.onlinebookstore.dto.cartitem.CartItemDto;
 import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
@@ -32,6 +33,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final BookRepository bookRepository;
 
     @Override
+    @Transactional
     public ShoppingCartResponseDto get(Long userId, Pageable pageable) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
         Page<CartItem> cartItemsPage = cartItemRepository
@@ -49,7 +51,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public ShoppingCartResponseDto addItem(CreateCartItemRequestDto requestDto, Long userId) {
-        Book book = findBookByIdFromDto(requestDto);
+        Long bookId = requestDto.getBookId();
+
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("No book with id " + bookId + " found")
+                );;
 
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
 
@@ -57,14 +64,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .filter(item -> item.getBook().getId().equals(requestDto.getBookId()))
                 .findFirst()
                 .ifPresentOrElse(
-                        item -> updateExistingItem(item, requestDto.getQuantity()),
+                        item -> item.setQuantity(item.getQuantity() + requestDto.getQuantity()),
                         () -> addNewItemToCart(shoppingCart, requestDto, book));
 
         return shoppingCartMapper.toDto(shoppingCart);
-    }
-
-    private void updateExistingItem(CartItem item, int quantity) {
-        item.setQuantity(item.getQuantity() + quantity);
     }
 
     private void addNewItemToCart(ShoppingCart shoppingCart,
@@ -78,22 +81,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartResponseDto updateItem(CreateCartItemRequestDto requestDto,
+    @Transactional
+    public ShoppingCartResponseDto updateItem(UpdateBookRequestDto requestDto,
                                               Long userId,
-                                              Long cartId) {
-        checkIfCartItemExists(cartId);
-
-        Book book = findBookByIdFromDto(requestDto);
-        ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
-
-        CartItem cartItem = cartItemMapper.toModel(requestDto);
-        cartItem.setBook(book);
-        cartItem.setShoppingCart(shoppingCart);
-        cartItem.setQuantity(requestDto.getQuantity());
-        cartItem.setId(cartId);
+                                              Long cartItemId) {
+        ShoppingCart cart = getShoppingCartByUserId(userId);
+        CartItem cartItem = cartItemRepository.findByIdAndShoppingCartId(cartItemId, cart.getId())
+                .map(item -> {
+                    item.setQuantity(requestDto.quantity());
+                    return item;
+                }).orElseThrow(() -> new EntityNotFoundException(
+                        String.format("No cart item with id: %d for user: %d", cartItemId, userId)
+                ));
         cartItemRepository.save(cartItem);
-
-        return shoppingCartMapper.toDto(shoppingCart);
+        return shoppingCartMapper.toDto(cart);
     }
 
     @Override
@@ -101,24 +102,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItemRepository.deleteById(cartId);
     }
 
-    private void checkIfCartItemExists(Long cartId) {
-        cartItemRepository.findById(cartId).orElseThrow(
-                () -> new EntityNotFoundException("No cart with id " + cartId + " found")
-        );
-    }
-
     private ShoppingCart getShoppingCartByUserId(Long userId) {
         return shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(
                         () -> new EntityNotFoundException("No shopping cart owned by user with id "
                                 + userId + " found"));
-    }
-
-    private Book findBookByIdFromDto(CreateCartItemRequestDto requestDto) {
-        Long bookId = requestDto.getBookId();
-        return bookRepository.findById(bookId)
-                .orElseThrow(
-                        () -> new EntityNotFoundException("No book with id " + bookId + " found")
-                );
     }
 }

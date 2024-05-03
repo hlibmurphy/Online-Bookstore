@@ -66,7 +66,6 @@ public class OrderServiceImpl implements OrderService {
         );
         order.setStatus(requestDto.getStatus());
         Order updatedOrder = orderRepository.save(order);
-
         return orderMapper.toDto(updatedOrder);
     }
 

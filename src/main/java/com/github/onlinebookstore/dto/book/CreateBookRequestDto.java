@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
 public class CreateBookRequestDto {
     @NotBlank
     private String title;
+    @NotBlank
     private String author;
     @Length(min = 13, max = 13)
     private String isbn;

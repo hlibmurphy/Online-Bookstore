@@ -5,5 +5,4 @@ public record OrderItemDtoWithoutOrder(
         Long bookId,
         int quantity
 ) {
-
 }

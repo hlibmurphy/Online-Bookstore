@@ -13,9 +13,8 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.Set;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -25,8 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @SQLDelete(sql = "UPDATE users SET is_deleted = TRUE WHERE id = ?")
 @SQLRestriction(value = "is_deleted = FALSE")
 @Table(name = "users")

@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.controller;
 
+import com.github.onlinebookstore.dto.book.UpdateBookRequestDto;
 import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
 import com.github.onlinebookstore.model.User;
@@ -53,11 +54,11 @@ public class CartController {
     @Operation(summary = "Change shopping cart item",
             description = "Change an item from a user's cart")
     public ShoppingCartResponseDto changeItemInCart(
-            @RequestBody CreateCartItemRequestDto cartItemRequestDto,
+            @RequestBody UpdateBookRequestDto updateBookRequestDto,
             Authentication authentication,
             @PathVariable Long id) {
         User user = (User) authentication.getPrincipal();
-        return shoppingCartService.updateItem(cartItemRequestDto, user.getId(), id);
+        return shoppingCartService.updateItem(updateBookRequestDto, user.getId(), id);
     }
 
     @DeleteMapping("/cart-items/{id}")

@@ -9,10 +9,12 @@ import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repository.BookRepository;
 import com.github.onlinebookstore.repository.impl.BookSpecificationBuilder;
 import com.github.onlinebookstore.service.BookService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,9 +34,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable).stream()
-                .map(bookMapper::toDto)
-                .toList();
+        Page<Book> books = bookRepository.findAll(pageable);
+        return bookMapper.toDtos(books);
     }
 
     @Override
@@ -46,9 +47,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId) {
-        return bookRepository.findAllByCategoryId(categoryId).stream()
-                .map(bookMapper::toDtoWithoutCategories)
-                .toList();
+        List<Book> allByCategoryId = bookRepository.findBookByCategoriesId(categoryId);
+        return bookMapper.toDtosWithoutCategories(allByCategoryId);
     }
 
     @Override
@@ -57,6 +57,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public BookDto updateBook(Long id, CreateBookRequestDto newBookRequest) {
         bookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No book with id " + id + " found."));
@@ -67,10 +68,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(BookSearchParameters parameters) {
+    public List<BookDto> search(BookSearchParameters parameters, Pageable pageable) {
         Specification<Book> bookSpecification = bookSpecificationBuilder.build(parameters);
-        return bookRepository.findAll(bookSpecification).stream()
-                .map(bookMapper::toDto)
-                .toList();
+        return bookMapper.toDtos(bookRepository.findAll(bookSpecification, pageable));
     }
 }

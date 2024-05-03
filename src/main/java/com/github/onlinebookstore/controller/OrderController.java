@@ -13,7 +13,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +37,7 @@ public class OrderController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Create a new order")
-    public OrderDto createOrder(@RequestBody CreateOrderRequestDto requestDto,
+    public OrderDto createOrder(@RequestBody @Valid CreateOrderRequestDto requestDto,
                                 Authentication authentication) {
         return orderService.add(requestDto, getUserId(authentication));
     }
@@ -43,7 +45,8 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Get order history", description = "Get user's order history")
-    public List<OrderDto> getAll(Authentication authentication, Pageable pageable) {
+    public List<OrderDto> getAll(Authentication authentication,
+                                 @ParameterObject @PageableDefault Pageable pageable) {
         return orderService.getAllOrders(getUserId(authentication), pageable);
     }
 
