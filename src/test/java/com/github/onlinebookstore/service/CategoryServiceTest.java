@@ -73,9 +73,7 @@ public class CategoryServiceTest {
         when(categoryRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            categoryService.getById(categoryId);
-        });
+        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.getById(categoryId));
     }
 
     @Test
@@ -144,9 +142,7 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            categoryService.deleteById(categoryId);
-        });
+        Assertions.assertThrows(EntityNotFoundException.class, () -> categoryService.deleteById(categoryId));
     }
 
     private Category mapToModel(Long id, CreateCategoryRequestDto createCategoryRequestDto) {

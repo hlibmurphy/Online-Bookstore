@@ -56,7 +56,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(
                         () -> new EntityNotFoundException("No book with id " + bookId + " found")
-                );;
+                );
 
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
 
@@ -105,7 +105,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCart getShoppingCartByUserId(Long userId) {
         return shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("No shopping cart owned by user with id "
-                                + userId + " found"));
+                        () -> new EntityNotFoundException(
+                                "No shopping cart owned by user with id " + userId + " found"));
     }
 }
