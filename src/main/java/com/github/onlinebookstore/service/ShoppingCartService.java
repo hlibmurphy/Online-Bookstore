@@ -6,7 +6,7 @@ import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
 import org.springframework.data.domain.Pageable;
 
 public interface ShoppingCartService {
-    ShoppingCartResponseDto get(Long userId, Pageable pageable);
+    ShoppingCartResponseDto getByUserId(Long userId, Pageable pageable);
 
     ShoppingCartResponseDto addItem(CreateCartItemRequestDto cartItemRequestDto,
                                     Long userId);
@@ -15,5 +15,5 @@ public interface ShoppingCartService {
                                        Long userId,
                                        Long cartItemId);
 
-    void removeItemFromCart(Long id);
+    void deleteItemFromCart(Long id);
 }

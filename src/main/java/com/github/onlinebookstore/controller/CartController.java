@@ -35,7 +35,7 @@ public class CartController {
             @PageableDefault(size = 1, page = 0) Pageable pageable) {
 
         User user = (User) authentication.getPrincipal();
-        return shoppingCartService.get(user.getId(), pageable);
+        return shoppingCartService.getByUserId(user.getId(), pageable);
     }
 
     @PostMapping
@@ -66,6 +66,6 @@ public class CartController {
     @Operation(summary = "Remove an item from a shopping cart",
             description = "Remove an item from user's shopping cart")
     public void removeItemFromCart(@PathVariable Long id) {
-        shoppingCartService.removeItemFromCart(id);
+        shoppingCartService.deleteItemFromCart(id);
     }
 }

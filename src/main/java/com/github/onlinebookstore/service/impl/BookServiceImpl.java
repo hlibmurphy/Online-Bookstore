@@ -9,9 +9,9 @@ import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.repository.BookRepository;
 import com.github.onlinebookstore.repository.impl.BookSpecificationBuilder;
 import com.github.onlinebookstore.service.BookService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,26 +41,33 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto findBookById(Long id) {
         Optional<Book> foundBook = bookRepository.findById(id);
-        return bookMapper.toDto(foundBook.orElseThrow(() -> new NoSuchElementException("No book "
+        return bookMapper.toDto(foundBook.orElseThrow(() -> new EntityNotFoundException("No book "
                 + "with id " + id + " found.")));
     }
 
     @Override
     public List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId) {
-        List<Book> allByCategoryId = bookRepository.findBookByCategoriesId(categoryId);
+        List<Book> allByCategoryId = bookRepository.findBooksByCategoriesId(categoryId);
         return bookMapper.toDtosWithoutCategories(allByCategoryId);
     }
 
     @Override
-    public void deleteById(Long id) {
+    @Transactional
+    public BookDto deleteById(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("No book with id " + id + " found")
+        );
         bookRepository.deleteById(id);
+
+        return bookMapper.toDto(book);
     }
 
     @Override
     @Transactional
     public BookDto updateBook(Long id, CreateBookRequestDto newBookRequest) {
         bookRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No book with id " + id + " found."));
+                .orElseThrow(
+                        () -> new EntityNotFoundException("No book with id " + id + " found."));
         Book newBook = bookMapper.toModel(newBookRequest);
         newBook.setId(id);
         Book savedBook = bookRepository.save(newBook);
