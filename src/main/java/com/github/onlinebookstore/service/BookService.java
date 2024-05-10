@@ -16,7 +16,7 @@ public interface BookService {
 
     List<BookDtoWithoutCategoryIds> findBooksByCategoryId(Long categoryId);
 
-    void deleteById(Long id);
+    BookDto deleteById(Long id);
 
     BookDto updateBook(Long id, CreateBookRequestDto requestDto);
 

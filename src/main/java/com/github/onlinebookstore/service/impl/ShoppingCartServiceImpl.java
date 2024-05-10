@@ -34,7 +34,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public ShoppingCartResponseDto get(Long userId, Pageable pageable) {
+    public ShoppingCartResponseDto getByUserId(Long userId, Pageable pageable) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
         Page<CartItem> cartItemsPage = cartItemRepository
                 .findByShoppingCart(shoppingCart, pageable);
@@ -98,8 +98,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void removeItemFromCart(Long cartId) {
-        cartItemRepository.deleteById(cartId);
+    public void deleteItemFromCart(Long cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
     }
 
     private ShoppingCart getShoppingCartByUserId(Long userId) {
