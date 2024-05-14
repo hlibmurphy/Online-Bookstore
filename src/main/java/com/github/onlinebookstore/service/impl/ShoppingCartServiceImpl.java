@@ -50,8 +50,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public ShoppingCartResponseDto addItem(CreateCartItemRequestDto requestDto, Long userId) {
-        Long bookId = requestDto.getBookId();
+    public ShoppingCartResponseDto addItem(CreateCartItemRequestDto itemDto, Long userId) {
+        Long bookId = itemDto.getBookId();
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(
@@ -61,14 +61,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
 
         shoppingCart.getCartItems().stream()
-                .filter(item -> item.getBook().getId().equals(requestDto.getBookId()))
+                .filter(item -> item.getBook().getId().equals(itemDto.getBookId()))
                 .findFirst()
                 .ifPresentOrElse(
-                        item -> item.setQuantity(item.getQuantity() + requestDto.getQuantity()),
-                        () -> addNewItemToCart(shoppingCart, requestDto, book));
+                        item -> item.setQuantity(item.getQuantity() + itemDto.getQuantity()),
+                        () -> addNewItemToCart(shoppingCart, itemDto, book));
 
         return shoppingCartMapper.toDto(shoppingCart);
     }
+
 
     private void addNewItemToCart(ShoppingCart shoppingCart,
                                   CreateCartItemRequestDto itemDto,
@@ -98,8 +99,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteItemFromCart(Long cartItemId) {
+    public CartItemDto deleteItemFromCartById(Long cartItemId) {
+        cartItemRepository.findById(cartItemId);
         cartItemRepository.deleteById(cartItemId);
+        return null;
     }
 
     private ShoppingCart getShoppingCartByUserId(Long userId) {

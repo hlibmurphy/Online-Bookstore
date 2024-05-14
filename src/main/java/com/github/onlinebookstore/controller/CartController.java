@@ -66,6 +66,6 @@ public class CartController {
     @Operation(summary = "Remove an item from a shopping cart",
             description = "Remove an item from user's shopping cart")
     public void removeItemFromCart(@PathVariable Long id) {
-        shoppingCartService.deleteItemFromCart(id);
+        shoppingCartService.deleteItemFromCartById(id);
     }
 }
