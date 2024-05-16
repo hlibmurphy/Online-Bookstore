@@ -61,11 +61,12 @@ public class CartController {
         return shoppingCartService.updateItem(updateBookRequestDto, user.getId(), id);
     }
 
-    @DeleteMapping("/cart-items/{id}")
+    @DeleteMapping("/cart-items/{itemId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Remove an item from a shopping cart",
             description = "Remove an item from user's shopping cart")
-    public void removeItemFromCart(@PathVariable Long id) {
-        shoppingCartService.deleteItemFromCartById(id);
+    public void removeItemFromCart(@PathVariable Long itemId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        shoppingCartService.deleteItemFromCartById(itemId, user);
     }
 }

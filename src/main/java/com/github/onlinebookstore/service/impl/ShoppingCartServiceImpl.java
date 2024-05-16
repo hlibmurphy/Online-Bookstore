@@ -9,6 +9,7 @@ import com.github.onlinebookstore.mapper.ShoppingCartMapper;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.model.CartItem;
 import com.github.onlinebookstore.model.ShoppingCart;
+import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repository.BookRepository;
 import com.github.onlinebookstore.repository.CartItemRepository;
 import com.github.onlinebookstore.repository.ShoppingCartRepository;
@@ -65,20 +66,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .findFirst()
                 .ifPresentOrElse(
                         item -> item.setQuantity(item.getQuantity() + itemDto.getQuantity()),
-                        () -> addNewItemToCart(shoppingCart, itemDto, book));
-
+                        () -> addCartItemToCart(shoppingCart, itemDto, book));
+        shoppingCartRepository.save(shoppingCart);
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
-
-    private void addNewItemToCart(ShoppingCart shoppingCart,
-                                  CreateCartItemRequestDto itemDto,
-                                  Book book) {
-        CartItem item = cartItemMapper.toModel(itemDto);
-        item.setBook(book);
-        item.setShoppingCart(shoppingCart);
-        CartItem savedItem = cartItemRepository.save(item);
-        shoppingCart.addItemToCart(savedItem);
+    private void addCartItemToCart(ShoppingCart shoppingCart,
+                                   CreateCartItemRequestDto itemDto,
+                                   Book book) {
+        CartItem cartItem = cartItemMapper.toModel(itemDto);
+        cartItem.setBook(book);
+        shoppingCart.addItemToCart(cartItem);
     }
 
     @Override
@@ -99,10 +97,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartItemDto deleteItemFromCartById(Long cartItemId) {
-        cartItemRepository.findById(cartItemId);
+    public CartItemDto deleteItemFromCartById(Long cartItemId, User user) {
+        CartItem cartItem =
+                cartItemRepository.findByIdAndShoppingCartId(cartItemId,
+                        user.getShoppingCart().getId()).orElseThrow(
+                                () -> new EntityNotFoundException(
+                                        "No cart item with id: " + cartItemId
+                                )
+                );
+
         cartItemRepository.deleteById(cartItemId);
-        return null;
+        return cartItemMapper.toDto(cartItem);
     }
 
     private ShoppingCart getShoppingCartByUserId(Long userId) {

@@ -1,5 +1,6 @@
 package com.github.onlinebookstore.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,12 +30,13 @@ public class ShoppingCart {
     @OneToOne
     @JoinColumn(nullable = false)
     private User user;
-    @OneToMany(mappedBy = "shoppingCart", orphanRemoval = true)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();
     @Column(nullable = false)
     private boolean isDeleted = false;
 
     public void addItemToCart(CartItem cartItem) {
+        cartItem.setShoppingCart(this);
         cartItems.add(cartItem);
     }
 }
