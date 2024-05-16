@@ -12,6 +12,7 @@ import com.github.onlinebookstore.repository.RoleRepository;
 import com.github.onlinebookstore.repository.UserRepository;
 import com.github.onlinebookstore.security.JwtUtil;
 import com.github.onlinebookstore.service.AuthenticationService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
 
         Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER).orElseThrow(
-                () -> new RuntimeException("Cannot find a role " + Role.RoleName.ROLE_USER));
+                () -> new EntityNotFoundException("Cannot find a role " + Role.RoleName.ROLE_USER));
         userRole.setName(Role.RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
 
