@@ -1,9 +1,11 @@
 package com.github.onlinebookstore.service.impl;
 
+import com.github.onlinebookstore.dto.user.UserResponseDto;
+import com.github.onlinebookstore.mapper.UserMapper;
 import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repository.UserRepository;
 import com.github.onlinebookstore.service.UserService;
-import java.util.NoSuchElementException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,17 +13,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @Override
-    public void deleteById(Long id) {
+    public UserResponseDto deleteById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User with id " + id + " not found"));
         userRepository.deleteById(id);
+        return userMapper.toDto(user);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserResponseDto findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NoSuchElementException("Cannot find user with email " + email));
+                () -> new EntityNotFoundException("Cannot find user with email " + email));
 
-        return user;
+        return userMapper.toDto(user);
     }
 }
