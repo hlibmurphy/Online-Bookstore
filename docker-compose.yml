@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    platform: linux/arm64
+    image: mysql:8.0
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQLDB_USER=$MYSQL_USER
+      - MYSQLDB_PASSWORD=$MYSQL_PASSWORD
+      - MYSQLDB_DATABASE=$MYSQL_DATABASE
+      - MYSQLDB_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    ports:
+      - $MYSQL_LOCAL_PORT:$MYSQL_DOCKER_PORT
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  app:
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    image: bookstore-service
+    build: .
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - $DEBUG_PORT:$DEBUG_PORT
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
