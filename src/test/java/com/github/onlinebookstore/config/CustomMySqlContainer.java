@@ -1,6 +1,7 @@
 package com.github.onlinebookstore.config;
 
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 
 public class CustomMySqlContainer extends MySQLContainer<CustomMySqlContainer> {
     private static final String DB_IMAGE = "mysql:8";
@@ -9,6 +10,7 @@ public class CustomMySqlContainer extends MySQLContainer<CustomMySqlContainer> {
 
     private CustomMySqlContainer() {
         super(DB_IMAGE);
+        this.waitingFor(Wait.forHealthcheck());
     }
 
     public static synchronized CustomMySqlContainer getInstance() {

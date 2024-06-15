@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/books")
 public class BookController {
     private static final int STANDARD_PAGE_SIZE = 10;
-    private static final Logger log = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
