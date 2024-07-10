@@ -2,6 +2,7 @@ package com.github.onlinebookstore.repository;
 
 import com.github.onlinebookstore.model.Role;
 import com.github.onlinebookstore.model.User;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
@@ -9,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -25,9 +24,9 @@ public class UserRepositoryTest {
         String email = "email@email.com";
         User expected = new User();
         expected.setEmail(email);
-        Role role = new Role();
-        role.setName(Role.RoleName.ROLE_USER);
-        roleRepository.save(role);
+        Role role = roleRepository.findByName(Role.RoleName.ROLE_USER)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("Cannot find role USER"));
         expected.setRoles(Set.of(role));
         expected.setPassword("password");
         expected.setFirstName("FirstName");
