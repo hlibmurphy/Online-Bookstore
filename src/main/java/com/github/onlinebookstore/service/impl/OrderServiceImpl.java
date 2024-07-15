@@ -34,10 +34,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDto add(CreateOrderRequestDto requestDto, Long userId) {
+    public OrderDto add(CreateOrderRequestDto orderDto, Long userId) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
         Set<OrderItem> orderItems = orderItemMapper.toOrderItems(shoppingCart.getCartItems());
-        Order order = orderMapper.toModel(requestDto);
+        Order order = orderMapper.toModel(orderDto);
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         order.setOrderItems(orderItems);
         User user = getUserById(userId);

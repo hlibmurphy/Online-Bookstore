@@ -9,6 +9,7 @@ import com.github.onlinebookstore.mapper.ShoppingCartMapper;
 import com.github.onlinebookstore.model.Book;
 import com.github.onlinebookstore.model.CartItem;
 import com.github.onlinebookstore.model.ShoppingCart;
+import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repository.BookRepository;
 import com.github.onlinebookstore.repository.CartItemRepository;
 import com.github.onlinebookstore.repository.ShoppingCartRepository;
@@ -34,7 +35,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public ShoppingCartResponseDto get(Long userId, Pageable pageable) {
+    public ShoppingCartResponseDto getByUserId(Long userId, Pageable pageable) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
         Page<CartItem> cartItemsPage = cartItemRepository
                 .findByShoppingCart(shoppingCart, pageable);
@@ -50,34 +51,32 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public ShoppingCartResponseDto addItem(CreateCartItemRequestDto requestDto, Long userId) {
-        Long bookId = requestDto.getBookId();
+    public ShoppingCartResponseDto addItem(CreateCartItemRequestDto itemDto, Long userId) {
+        Long bookId = itemDto.getBookId();
 
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(
                         () -> new EntityNotFoundException("No book with id " + bookId + " found")
-                );;
+                );
 
         ShoppingCart shoppingCart = getShoppingCartByUserId(userId);
 
         shoppingCart.getCartItems().stream()
-                .filter(item -> item.getBook().getId().equals(requestDto.getBookId()))
+                .filter(item -> item.getBook().getId().equals(itemDto.getBookId()))
                 .findFirst()
                 .ifPresentOrElse(
-                        item -> item.setQuantity(item.getQuantity() + requestDto.getQuantity()),
-                        () -> addNewItemToCart(shoppingCart, requestDto, book));
-
+                        item -> item.setQuantity(item.getQuantity() + itemDto.getQuantity()),
+                        () -> addCartItemToCart(shoppingCart, itemDto, book));
+        shoppingCartRepository.save(shoppingCart);
         return shoppingCartMapper.toDto(shoppingCart);
     }
 
-    private void addNewItemToCart(ShoppingCart shoppingCart,
-                                  CreateCartItemRequestDto itemDto,
-                                  Book book) {
-        CartItem item = cartItemMapper.toModel(itemDto);
-        item.setBook(book);
-        item.setShoppingCart(shoppingCart);
-        CartItem savedItem = cartItemRepository.save(item);
-        shoppingCart.addItemToCart(savedItem);
+    private void addCartItemToCart(ShoppingCart shoppingCart,
+                                   CreateCartItemRequestDto itemDto,
+                                   Book book) {
+        CartItem cartItem = cartItemMapper.toModel(itemDto);
+        cartItem.setBook(book);
+        shoppingCart.addItemToCart(cartItem);
     }
 
     @Override
@@ -98,14 +97,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void removeItemFromCart(Long cartId) {
-        cartItemRepository.deleteById(cartId);
+    public CartItemDto deleteItemFromCartById(Long cartItemId, User user) {
+        CartItem cartItem =
+                cartItemRepository.findByIdAndShoppingCartId(cartItemId,
+                        user.getShoppingCart().getId()).orElseThrow(
+                                () -> new EntityNotFoundException(
+                                        "No cart item with id: " + cartItemId
+                                )
+                );
+
+        cartItemRepository.deleteById(cartItemId);
+        return cartItemMapper.toDto(cartItem);
     }
 
     private ShoppingCart getShoppingCartByUserId(Long userId) {
         return shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("No shopping cart owned by user with id "
-                                + userId + " found"));
+                        () -> new EntityNotFoundException(
+                                "No shopping cart owned by user with id " + userId + " found"));
     }
 }

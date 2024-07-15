@@ -1,10 +1,10 @@
 package com.github.onlinebookstore.service;
 
-import com.github.onlinebookstore.model.User;
+import com.github.onlinebookstore.dto.user.UserResponseDto;
 
 public interface UserService {
 
-    void deleteById(Long id);
+    UserResponseDto deleteById(Long id);
 
-    User findByEmail(String email);
+    UserResponseDto findByEmail(String email);
 }

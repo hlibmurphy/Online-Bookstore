@@ -1,12 +1,14 @@
 package com.github.onlinebookstore.service;
 
 import com.github.onlinebookstore.dto.book.UpdateBookRequestDto;
+import com.github.onlinebookstore.dto.cartitem.CartItemDto;
 import com.github.onlinebookstore.dto.cartitem.CreateCartItemRequestDto;
 import com.github.onlinebookstore.dto.shoppingcart.ShoppingCartResponseDto;
+import com.github.onlinebookstore.model.User;
 import org.springframework.data.domain.Pageable;
 
 public interface ShoppingCartService {
-    ShoppingCartResponseDto get(Long userId, Pageable pageable);
+    ShoppingCartResponseDto getByUserId(Long userId, Pageable pageable);
 
     ShoppingCartResponseDto addItem(CreateCartItemRequestDto cartItemRequestDto,
                                     Long userId);
@@ -15,5 +17,5 @@ public interface ShoppingCartService {
                                        Long userId,
                                        Long cartItemId);
 
-    void removeItemFromCart(Long id);
+    CartItemDto deleteItemFromCartById(Long cartItemId, User user);
 }
