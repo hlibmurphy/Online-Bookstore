@@ -46,7 +46,8 @@ public class User implements UserDetails {
     private Set<Role> roles;
     @Column(nullable = false)
     private boolean isDeleted = false;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
     private ShoppingCart shoppingCart;
 
     @Override

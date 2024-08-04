@@ -7,6 +7,7 @@ import com.github.onlinebookstore.dto.user.UserResponseDto;
 import com.github.onlinebookstore.exception.RegistrationException;
 import com.github.onlinebookstore.mapper.UserMapper;
 import com.github.onlinebookstore.model.Role;
+import com.github.onlinebookstore.model.ShoppingCart;
 import com.github.onlinebookstore.model.User;
 import com.github.onlinebookstore.repository.RoleRepository;
 import com.github.onlinebookstore.repository.UserRepository;
@@ -48,6 +49,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 () -> new EntityNotFoundException("Cannot find a role " + Role.RoleName.ROLE_USER));
         userRole.setName(Role.RoleName.ROLE_USER);
         user.setRoles(Set.of(userRole));
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+        user.setShoppingCart(shoppingCart);
 
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);
