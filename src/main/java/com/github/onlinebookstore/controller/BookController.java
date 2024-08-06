@@ -27,7 +27,6 @@ public class BookController {
     private static final int STANDARD_PAGE_SIZE = 10;
     private final BookService bookService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     @Operation(summary = "Get all books", description = "Get all books starting from a "
             + "first page with a size of " + STANDARD_PAGE_SIZE)
@@ -36,14 +35,12 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/{id}")
-    @Operation(summary = "Get book from id", description = "Get book from id")
+    @Operation(summary = "Get book by id", description = "Get book by id")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findBookById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/search")
     @Operation(summary = "Search book by parameters", description = "Search book by parameters")
     public List<BookDto> search(BookSearchParameters searchParameters, Pageable pageable) {

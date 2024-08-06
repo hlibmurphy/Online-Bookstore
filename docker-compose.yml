@@ -17,7 +17,7 @@ services:
       test: [ "CMD-SHELL", "mysqladmin ping -h localhost" ]
       interval: 30s
       timeout: 30s
-      retries: 3
+      retries: 10
   app:
     depends_on:
       - mysqldb
