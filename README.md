@@ -61,16 +61,12 @@ You can login as admin using these credentials on `http://localhost:8081/api/aut
 }
 ```
 
-[![VIDEO](https://img.youtube.com/vi/6ws8RWbppKI/0.jpg)](https://www.youtube.com/watch?v=6ws8RWbppKI)
-
-
 The application provides the following features:
 - Browse books
 - Search for books
-- User authentication (registration, login, logout)
+- User authentication (registration, login)
 - Add books to cart
-- Checkout and place orders
-- Leave reviews for books
+- Place orders
 
 ## Running Tests
 To run the automated tests, use the following command:
