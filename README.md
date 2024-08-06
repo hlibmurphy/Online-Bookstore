@@ -11,7 +11,7 @@
 - [Acknowledgements](#acknowledgements)
 
 ## About
-The Online Bookstore project is a web application that allows users to browse, search, and purchase books. It includes features like user authentication, book reviews, and an admin panel to manage inventory and orders.
+The Online Bookstore project is a web application that allows users to browse, search, and purchase books. It includes features like user authentication, and an admin panel to comfortably manage inventory and orders.
 
 ## Getting Started
 These instructions will help you set up the project on your local machine for development and testing purposes.
@@ -36,11 +36,11 @@ cd Online-Bookstore
 # Step 3: Install dependencies using Maven
 mvn clean install
 
-# Step 5: Set up environment variables
+# Step 4: Set up environment variables
 cp .env.example .env
 # Edit .env file to match your configuration (e.g., database connection details)
 
-# Step 6: Build JAR file
+# Step 5: Build JAR file
 mvn clean package
 
 # Step 6: Build Docker Image
@@ -50,7 +50,21 @@ docker build -t online-bookstore .
 docker-compose up
 ```
 ### Usage
-Once the application is running, you can access it at `http://localhost:8080`. The application provides the following features:
+Once the application is running, you can access it at `http://localhost:8081`. 
+For documentation go to `http://localhost:8081/api/swagger-ui/index.html`
+
+You can login as admin using these credentials on `http://localhost:8081/api/auth/login`
+```bash
+{
+    "email": "admin@email.com",
+    "password": "12345678"
+}
+```
+
+[![VIDEO](https://img.youtube.com/vi/6ws8RWbppKI/0.jpg)](https://www.youtube.com/watch?v=6ws8RWbppKI)
+
+
+The application provides the following features:
 - Browse books
 - Search for books
 - User authentication (registration, login, logout)
