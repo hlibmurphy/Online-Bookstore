@@ -43,10 +43,7 @@ cp .env.example .env
 # Step 5: Build JAR file
 mvn clean package
 
-# Step 6: Build Docker Image
-docker build -t online-bookstore .
-
-# Step 7: Run the application
+# Step 6: Run the application
 docker-compose up
 ```
 ### Usage
@@ -71,7 +68,6 @@ The application provides the following features:
 ## Running Tests
 To run the automated tests, use the following command:
 
-# Running unit tests
 ```
 mvn test
 ```
