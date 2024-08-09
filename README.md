@@ -37,7 +37,7 @@ cd Online-Bookstore
 mvn clean install
 
 # Step 4: Set up environment variables
-cp .env.example .env
+cp .env.template .env
 # Edit .env file to match your configuration (e.g., database connection details)
 
 # Step 5: Build JAR file
@@ -73,12 +73,15 @@ mvn test
 ```
 
 ## Built With
-- Spring Boot - Framework
-- Hibernate - ORM
+- Java 17
+- Spring Boot 3.2.3 - Framework
+- Hibernate 6.4.4 - ORM
 - MySQL - Database
-- Docker - Containerization
-- Mockito - Testing
-- TestContainers - Testing
+- Liquibase 4.26.0 - Database change management
+- Spring Doc 2.4.0 (Swagger) - documentation
+- Docker 4.33.1 - Containerization
+- Mockito 5.11.0 - Testing
+- TestContainers 1.19.7 - Testing
 
 ## Authors
 - **Hlib Bykovskyi** - *Initial work* - [hlibmurphy](https://github.com/hlibmurphy)
